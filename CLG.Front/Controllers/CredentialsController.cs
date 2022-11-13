@@ -1,4 +1,5 @@
-﻿using CLG.Front.Models;
+﻿using CLG.Core.Contracts;
+using CLG.Front.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CLG.Front.Controllers
@@ -6,27 +7,38 @@ namespace CLG.Front.Controllers
     public class CredentialsController : Controller
     {
         private readonly ILogger<CredentialsController> _logger;
-        private readonly CLG.Controllers.CredentialsController credentialsController;
+        private readonly ICredentialService credentialService;
 
 
-        public CredentialsController(ILogger<CredentialsController> logger, CLG.Controllers.CredentialsController _credentialsController)
+        public CredentialsController(ILogger<CredentialsController> logger, ICredentialService _credentialService)
         {
             _logger = logger;
-            credentialsController = _credentialsController;
+            credentialService = _credentialService;
         }
 
-        [HttpGet("{key}")]
-        public IActionResult Get(string key)
+        [HttpGet]
+        [Route("Credentials/Get/{key}")]
+        public async Task<IActionResult> Get(string key)
         {
-            var apiModel = credentialsController.Get(key);
-
-            CredentialsViewModel model = new CredentialsViewModel
+            try
             {
-                Name = apiModel.Result.Name,
-                Password = apiModel.Result.Password,
-            };
+                var credentialsModel = await credentialService.ReadCredentials(key);
 
-            return View(model);
+                CredentialsViewModel model = new CredentialsViewModel
+                {
+                    Name = credentialsModel.Name,
+                    Password = credentialsModel.Password,
+                };
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return View("Error", new ErrorViewModel{Errors = e.Message});
+            }
+
         }
 
     }

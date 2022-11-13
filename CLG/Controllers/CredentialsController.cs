@@ -16,31 +16,12 @@ namespace CLG.Controllers
         {
             credentialService = _credentialService;
         }
-
-        [HttpGet("{key}")]
-        public async Task<CredentialsModel> Get(string key)
-        {
-            CredentialsModel credentialsModel;
-            
-            try
-            { 
-                credentialsModel = await credentialService.ReadCredentials(key);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                throw;
-            }
-
-
-            return credentialsModel;
-        }
-
+        
         [HttpPost]
         public async Task<string> Add(string inputJson)
         {
             string key = await credentialService.SaveCredentials(inputJson);
-            string uri = $"{Request.Host}/Get/{key}";
+            string uri = $"https://{Request.Host.Host}:7270/Credentials/Get/{key}";
 
             return uri;
         }

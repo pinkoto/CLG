@@ -7,8 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CLG.Data\CLG.Core.csproj" />
-    <ProjectReference Include="..\CLG\CLG.csproj" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CLG.Data\CLG.Core.csproj" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>
