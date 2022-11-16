@@ -17,9 +17,14 @@ namespace CLG.Front.Controllers
         }
 
         [HttpGet]
-        [Route("Credentials/Get/{key}")]
-        public async Task<IActionResult> Get(string key)
+        [Route("Credentials/Get/{key?}")]
+        public async Task<IActionResult> Get(string? key)
         {
+            if (string.IsNullOrEmpty(key))
+            {
+                return View("Error", new ErrorViewModel { Errors = "Invalid key" });
+            }
+
             try
             {
                 var credentialsModel = await credentialService.ReadCredentials(key);
@@ -36,7 +41,7 @@ namespace CLG.Front.Controllers
             {
                 Console.WriteLine(e.Message);
 
-                return View("Error", new ErrorViewModel{Errors = e.Message});
+                return View("Error", new ErrorViewModel { Errors = e.Message });
             }
 
         }
